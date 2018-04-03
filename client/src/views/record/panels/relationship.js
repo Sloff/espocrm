@@ -46,6 +46,25 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             Dep.prototype.init.call(this);
         },
 
+        getHeaderIconHtml: function () {
+            if (this.getConfig().get('scopeColorsDisabled')) {
+                return '';
+            }
+
+            var color = this.getMetadata().get(['clientDefs', this.scope, 'color']);
+            var html = '';
+
+            if (color) {
+                var $span = $('<span class="icon glyphicon glyphicon-unchecked">');
+                $span.css('color', color);
+                html = $span.get(0).outerHTML;
+            }
+
+            if (html) html += ' ';
+
+            return html;
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -56,6 +75,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
             this.title = this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
+
+            if (!this.getConfig().get('scopeColorsDisabled')) {
+                var iconHtml = this.getHeaderIconHtml();
+                if (iconHtml) {
+                    this.titleHtml = iconHtml + this.title;
+                }
+            }
 
             var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 

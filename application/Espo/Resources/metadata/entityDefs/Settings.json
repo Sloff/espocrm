@@ -456,6 +456,12 @@
         "textFilterUseContainsForVarchar": {
             "type": "bool",
             "tooltip": true
+        },
+        "scopeColorsDisabled": {
+            "type": "bool"
+        },
+        "tabIconsDisabled": {
+            "type": "bool"
         }
     }
 }

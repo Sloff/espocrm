@@ -105,6 +105,10 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         getHeaderIconHtml: function () {
+            if (this.getConfig().get('scopeColorsDisabled')) {
+                return '';
+            }
+
             var color = this.getMetadata().get(['clientDefs', this.scope, 'color']);
             var html = '';
 
@@ -113,7 +117,6 @@ Espo.define('views/main', 'view', function (Dep) {
                 $span.css('color', color);
                 html = $span.get(0).outerHTML;
             }
-
 
             if (html) html += ' ';
 

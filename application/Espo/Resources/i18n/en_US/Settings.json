@@ -94,7 +94,9 @@
         "adminNotifications": "System notifications in administration panel",
         "adminNotificationsNewVersion": "Show notification when new EspoCRM version is available",
         "textFilterUseContainsForVarchar": "Use 'contains' opertor when filtering varchar fields",
-        "authTokenPreventConcurrent": "Only one auth token per user"
+        "authTokenPreventConcurrent": "Only one auth token per user",
+        "scopeColorsDisabled": "Disable scope colors",
+        "tabIconsDisabled": "Disable tab icons"
     },
     "options": {
         "weekStart": {
