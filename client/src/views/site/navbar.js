@@ -368,19 +368,29 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         setupTabDefsList: function () {
             var tabDefsList = [];
-            var moreIsMet = false;;
+            var moreIsMet = false;
+            var tabColorsDisabled = this.getConfig().get('tabColorsDisabled');
             this.tabList.forEach(function (tab, i) {
                 if (tab === '_delimiter_') {
                     moreIsMet = true;
                     return;
                 }
                 var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
+                var color = null;
+                if (!tabColorsDisabled) {
+                    var color = this.getMetadata().get(['clientDefs', tab, 'color']);
+                }
+
+                var shortLabel = label.substr(0, 2);
+
                 var o = {
                     link: '#' + tab,
                     label: label,
-                    shortLabel: label.substr(0, 2),
+                    shortLabel: shortLabel,
                     name: tab,
-                    isInMore: moreIsMet
+                    isInMore: moreIsMet,
+                    color: color,
+                    iconClass: this.getMetadata().get(['clientDefs', tab, 'iconClass']) 
                 };
                 tabDefsList.push(o);
             }, this);
