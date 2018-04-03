@@ -105,22 +105,7 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         getHeaderIconHtml: function () {
-            if (this.getConfig().get('scopeColorsDisabled')) {
-                return '';
-            }
-
-            var color = this.getMetadata().get(['clientDefs', this.scope, 'color']);
-            var html = '';
-
-            if (color) {
-                var $span = $('<span class="icon glyphicon glyphicon-unchecked">');
-                $span.css('color', color);
-                html = $span.get(0).outerHTML;
-            }
-
-            if (html) html += ' ';
-
-            return html;
+            return this.getHelper().getScopeColorIconHtml(this.scope);
         },
 
         actionShowModal: function (data) {

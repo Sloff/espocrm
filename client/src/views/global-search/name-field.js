@@ -37,11 +37,11 @@ Espo.define('views/global-search/name-field', 'views/fields/base', function (Dep
                 scope: this.model.get('_scope'),
                 name: this.model.get('name'),
                 id: this.model.id,
-                iconHtml: this.getHeaderIconHtml()
+                iconHtml: this.getHelper().getScopeColorIconHtml(this.model.get('_scope'))
             };
         },
 
-        getHeaderIconHtml: function () {
+        getIconHtml: function () {
             if (this.getConfig().get('scopeColorsDisabled')) {
                 return '';
             }
