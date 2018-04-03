@@ -96,6 +96,7 @@
         "textFilterUseContainsForVarchar": "Use 'contains' opertor when filtering varchar fields",
         "authTokenPreventConcurrent": "Only one auth token per user",
         "scopeColorsDisabled": "Disable scope colors",
+        "tabColorsDisabled": "Disable tab colors",
         "tabIconsDisabled": "Disable tab icons"
     },
     "options": {
