@@ -80,10 +80,10 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             var $body = $('body');
             if ($body.hasClass('minimized')) {
                 $body.removeClass('minimized');
-                this.getStorage().clear('state', 'layoutMinimized');
+                this.getStorage().set('state', 'siteLayoutState', 'expanded');
             } else {
                 $body.addClass('minimized');
-                this.getStorage().set('state', 'layoutMinimized', true);
+                this.getStorage().set('state', 'siteLayoutState', 'collapsed');
             }
             if (window.Event) {
                 try {
@@ -313,7 +313,13 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         afterRender: function () {
             this.selectTab(this.getRouter().getLast().controller);
 
-            if (this.getStorage().get('state', 'layoutMinimized')) {
+            var layoutState = this.getStorage().get('state', 'siteLayoutState');
+            var layoutMinimized = false;
+            if (layoutState === 'collapsed' || !layoutState) {
+                layoutMinimized = true;
+            }
+
+            if (layoutMinimized) {
                 var $body = $('body');
                 $body.addClass('minimized');
             }
