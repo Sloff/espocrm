@@ -41,7 +41,7 @@ Espo.define('crm:views/calendar/record/edit-view', 'views/record/base', function
                 labelText: this.translate('name', 'fields')
             });
 
-            this.createField('teams', 'views/fields/teams', {
+            this.createField('teams', 'views/fields/link-multiple', {
                 required: true
             }, null, null, {
                 labelText: this.translate('teams', 'fields'),
