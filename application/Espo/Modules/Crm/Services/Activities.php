@@ -1022,6 +1022,36 @@ class Activities extends \Espo\Core\Services\Base
         return $selectParams;
     }
 
+    public function getEventsForTeams($teamIdList, $from, $to, $scopeList = null)
+    {
+        if ($this->getAcl()->get('userPermission') === 'no') {
+            throw new Forbidden("User Permission not allowing to view calendars of other users.");
+        }
+        if ($this->getAcl()->get('userPermission') === 'team') {
+            $userTeamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+            foreach ($teamIdList as $teamId) {
+                if (!in_array($teamId, $userTeamIdList)) {
+                    throw new Forbidden("User Permission not allowing to view calendars of other teams.");
+                }
+            }
+        }
+
+        $userIdList = [];
+
+        $userList = $this->getEntityManager()->getRepository('User')->select(['id'])->leftJoin([['teams', 'teams']])->where([
+            'isActive' => true,
+            'teamsMiddle.teamId' => $teamIdList
+        ])->distinct()->find([], true);
+
+        foreach ($userList as $user) {
+            $userIdList[] = $user->id;
+        }
+
+        print_r($userIdList);
+        die;
+
+    }
+
     public function getEvents($userId, $from, $to, $scopeList = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);

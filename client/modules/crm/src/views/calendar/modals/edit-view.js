@@ -41,6 +41,7 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
 
         setup: function () {
             var id = this.options.id;
+
             if (id) {
                 this.isNew = false;
             } else {
@@ -79,6 +80,7 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
                         modelData.teamsNames = item.teamNames || {};
                         modelData.id = item.id;
                         modelData.name = item.name;
+                        modelData.mode = item.mode;
                     }
                 });
             } else {
@@ -92,6 +94,11 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
                 if (foundCount) {
                     modelData.name += ' ' + foundCount;
                 }
+
+                modelData.id = id;
+
+                modelData.teamsIds = this.getUser().get('teamsIds') || [];
+                modelData.teamsNames = this.getUser().get('teamsNames') || {};
             }
 
             model.set(modelData);
@@ -104,6 +111,7 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
 
         actionSave: function () {
             var modelData = this.getView('record').fetch();
+            this.getView('record').model.set(modelData);
 
             if (this.getView('record').validate()) {
                 return;
@@ -115,16 +123,17 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
             var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
 
             var data = {
-                id: modelData.id,
                 name: modelData.name,
-                teamIdList: modelData.teamIdList,
-                teamNames: modelData.teamsNames
+                teamIdList: modelData.teamsIds,
+                teamNames: modelData.teamsNames,
+                mode: modelData.mode
             };
 
             if (this.isNew) {
                 data.id = Math.random().toString(36).substr(2, 10);
                 calendarViewDataList.push(data);
             } else {
+                data.id = this.getView('record').model.id;
                 calendarViewDataList.forEach(function (item, i) {
                     if (item.id == data.id) {
                         calendarViewDataList[i] = data;
@@ -136,7 +145,7 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
 
             this.getPreferences().save({
                 'calendarViewDataList': calendarViewDataList
-            }).then(function () {
+            }, {patch: true}).then(function () {
                 Espo.Ui.notify(false);
                 this.trigger('after:save', data);
                 this.remove();
@@ -147,31 +156,35 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
         },
 
         actionRemove: function () {
-            this.disableButton('save');
-            this.disableButton('remove');
+            this.confirm(this.translate('confirmation', 'messages'), function () {
+                this.disableButton('save');
+                this.disableButton('remove');
 
-            var id = this.options.id;
+                var id = this.options.id;
 
-            if (!id) return;
+                if (!id) return;
 
-            var newCalendarViewDataList = [];
+                var newCalendarViewDataList = [];
 
-            calendarViewDataList.forEach(function (item, i) {
-                if (item.id !== id) {
-                    newCalendarViewDataList.push(item);
-                }
-            }, this);
+                var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-            this.getPreferences().save({
-                'calendarViewDataList': newCalendarViewDataList
-            }).then(function () {
-                Espo.Ui.notify(false);
-                this.trigger('after:remove');
-                this.remove();
-            }.bind(this)).fail(function () {
-                this.enableButton('remove');
-                this.enableButton('save');
+                calendarViewDataList.forEach(function (item, i) {
+                    if (item.id !== id) {
+                        newCalendarViewDataList.push(item);
+                    }
+                }, this);
+
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                this.getPreferences().save({
+                    'calendarViewDataList': newCalendarViewDataList
+                }, {patch: true}).then(function () {
+                    Espo.Ui.notify(false);
+                    this.trigger('after:remove');
+                    this.remove();
+                }.bind(this)).fail(function () {
+                    this.enableButton('remove');
+                    this.enableButton('save');
+                }.bind(this));
             }.bind(this));
         }
     });

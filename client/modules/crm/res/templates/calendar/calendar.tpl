@@ -9,6 +9,9 @@
             <button class="btn btn-default" data-action="next"><span class="glyphicon glyphicon-chevron-right"></span></button>
         </div>
         <button class="btn btn-default" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
+
+        <button class="btn btn-default{{#unless isCustomView}} hidden{{/unless}}" data-action="editCustomView" title="{{translate 'Edit'}}"><span class="glyphicon glyphicon-pencil"></span></button>
+
     </div>
 
     <div class="date-title col-sm-4 col-xs-6"><h4><span style="cursor: pointer;" data-action="refresh" title="{{translate 'Refresh'}}"></span></h4></div>
@@ -21,10 +24,10 @@
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul class="dropdown-menu pull-right">
-                    {{#if isSharedViewAvailable}}
+                    {{#if isCustomViewAvailable}}
                     {{#each viewDataList}}
                         <li>
-                            <a href="javascript:" class="{{#ifEqual id ../../../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{id}}">{{name}}</a>
+                            <a href="javascript:" class="{{#ifEqual mode ../../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{mode}}">{{name}}</a>
                         </li>
                     {{/each}}
                     {{#if viewDataList.length}}
@@ -38,10 +41,10 @@
                             </a>
                         </li>
                     {{/each}}
-                    {{#if isSharedViewAvailable}}
+                    {{#if isCustomViewAvailable}}
                         <li class="divider"></li>
                         <li>
-                            <a href="javascript:" data-action="createCalendarView">{{translate 'Create Shared View' scope='Calendar'}}</a>
+                            <a href="javascript:" data-action="createCustomView">{{translate 'Create Shared View' scope='Calendar'}}</a>
                         </li>
                     {{/if}}
                 </ul>
