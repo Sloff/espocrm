@@ -119,9 +119,13 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                     }
                     initial = false;
                 }, this);
-                this.listenTo(view, 'change:mode', function (mode) {
+                this.listenTo(view, 'change:mode', function (mode, refresh) {
                     this.mode = mode;
                     this.getStorage().set('state', 'calendarMode', mode);
+                    if (refresh) {
+                        this.updateUrl(true);
+                        return;
+                    }
                     if (!~this.fullCalendarModeList.indexOf(mode)) {
                         this.updateUrl(true);
                     }

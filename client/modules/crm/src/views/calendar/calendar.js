@@ -188,6 +188,17 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         selectMode: function (mode) {
             if (~this.fullCalendarModeList.indexOf(mode) || mode.indexOf('view-') === 0) {
+                var previosMode = this.mode;
+
+                if (
+                    mode.indexOf('view-') === 0 && previosMode.indexOf('view-') !== 0
+                    ||
+                    mode.indexOf('view-') !== 0 && previosMode.indexOf('view-') === 0
+                ) {
+                    this.trigger('change:mode', mode, true);
+                    return;
+                }
+
                 this.mode = mode;
                 this.setupMode();
                 if (this.isCustomView) {
@@ -198,6 +209,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 this.$el.find('[data-action="mode"]').removeClass('active');
                 this.$el.find('[data-mode="' + mode + '"]').addClass('active');
                 this.$calendar.fullCalendar('changeView', this.viewMode);
+
                 this.updateDate();
             }
             this.trigger('change:mode', mode);
