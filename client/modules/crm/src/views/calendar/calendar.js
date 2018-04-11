@@ -77,7 +77,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 mode: this.mode,
                 modeDataList: this.getModeDataList(),
                 header: this.header,
-                scopeFilterDataList: scopeFilterDataList
+                scopeFilterDataList: scopeFilterDataList,
+                isSharedViewAvailable: this.isSharedViewAvailable,
+                viewDataList: this.getViewDataList()
             };
         },
 
@@ -121,6 +123,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 e.stopPropagation(e);
 
                 this.toggleScopeFilter(filterName);
+            },
+            'click [data-action="createCalendarView"]': function () {
+                this.createCalendarView();
             }
         },
 
@@ -141,6 +146,8 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
             this.scopeFilter = false;
 
+            this.isSharedViewAvailable = this.getAcl().get('userPermission') !== 'no';
+
             var scopeList = [];
             this.scopeList.forEach(function (scope) {
                 if (this.getAcl().check(scope)) {
@@ -158,6 +165,10 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             if (Object.prototype.toString.call(this.enabledScopeList) !== '[object Array]') {
                 this.enabledScopeList = [];
             }
+        },
+
+        getViewDataList: function () {
+            return this.getPreferences().get('calendarViewDataList') || [];
         },
 
         toggleScopeFilter: function (name) {
@@ -692,8 +703,13 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.colors[scope] = additionalColorList[index];
 
             return this.colors[scope];
+        },
+
+        createCalendarView: function () {
+            this.createView('createCalendarView', 'crm:views/calendar/modals/edit-view', {}, function (view) {
+                view.render();
+            });
         }
 
     });
 });
-

@@ -21,6 +21,16 @@
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul class="dropdown-menu pull-right">
+                    {{#if isSharedViewAvailable}}
+                    {{#each viewDataList}}
+                        <li>
+                            <a href="javascript:" class="{{#ifEqual id ../../../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{id}}">{{name}}</a>
+                        </li>
+                    {{/each}}
+                    {{#if viewDataList.length}}
+                        <li class="divider"></li>
+                    {{/if}}
+                    {{/if}}
                     {{#each scopeFilterDataList}}
                         <li>
                             <a href="javascript:" data-action="toggleScopeFilter" data-name="{{scope}}">
@@ -28,6 +38,12 @@
                             </a>
                         </li>
                     {{/each}}
+                    {{#if isSharedViewAvailable}}
+                        <li class="divider"></li>
+                        <li>
+                            <a href="javascript:" data-action="createCalendarView">{{translate 'Create Shared View' scope='Calendar'}}</a>
+                        </li>
+                    {{/if}}
                 </ul>
             </div>
         </div>
